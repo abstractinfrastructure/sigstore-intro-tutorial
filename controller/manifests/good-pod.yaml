@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: good-pod
+  namespace: restricted-namespace
+spec:
+  containers:
+  - name: nginx
+    image: jeefy/nginx:signed
+    ports:
+    - containerPort: 80
