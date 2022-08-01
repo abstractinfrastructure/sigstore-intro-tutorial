@@ -1,6 +1,5 @@
 #! /usr/bin/env bash
 #doitlive shell: /bin/zsh
-#doitlive env:GITHUB_TOKEN=<your-token>
 #doitlive env:COSIGN_EXPERIMENTAL=1
 #doitlive env:GITHUB_ORG=<your-org>
 #doitlive env:GITHUB_REPO=<your-repo>
@@ -14,6 +13,8 @@ cosign verify "$GITHUB_ORG/$GITHUB_REPO" -o json | jq .
 
 uuid=$(cosign verify "$GITHUB_ORG/$GITHUB_REPO" -o json | jq '.[-1].optional.Bundle.Payload.logIndex')
 
+# If you want to install the rekor-cli to interact with the public rekor instance directly...
 rekor-cli get --log-index $uuid --format json | jq .
 
+# If you have OpenSSL installed, you can use the following command to verify the signature:
 rekor-cli get --log-index $uuid --format json | jq -r .Body.HashedRekordObj.signature.publicKey.content | base64 -d | openssl x509 -text -in /dev/stdin

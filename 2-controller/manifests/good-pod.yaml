@@ -6,6 +6,6 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: jeefy/nginx:signed
+    image: jeefy/sigstore-intro-tutorial:main
     ports:
     - containerPort: 80
