@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    policy.sigstore.dev/include: "true"
-  name: restricted-namespace

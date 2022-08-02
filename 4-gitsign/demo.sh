@@ -22,13 +22,15 @@ git commit -s --allow-empty --message="Signed commit by $(whoami)"
 git --no-pager log --show-signature -1
 
 # Now let's validate things the hard way! Let's get the UUID of the commit and look it up in rekor
-uuid=$(rekor-cli search --artifact <(git rev-parse HEAD | tr -d '\n') | tail -n 1)
+export uuid=$(rekor-cli search --artifact <(git rev-parse HEAD | tr -d '\n') | tail -n 1)
 rekor-cli get --uuid=$uuid --format=json | jq .
 
 # With that UUID, we can look up the signature content (also in rekor) and validate things with cosign
-sig=$(rekor-cli get --uuid=$uuid --format=json | jq -r .Body.HashedRekordObj.signature.content)
-cert=$(rekor-cli get --uuid=$uuid --format=json | jq -r .Body.HashedRekordObj.signature.publicKey.content)
+export sig=$(rekor-cli get --uuid=$uuid --format=json | jq -r .Body.HashedRekordObj.signature.content)
+export cert=$(rekor-cli get --uuid=$uuid --format=json | jq -r .Body.HashedRekordObj.signature.publicKey.content)
 cosign verify-blob --cert <(echo $cert | base64 --decode) --signature <(echo $sig | base64 --decode) <(git rev-parse HEAD | tr -d '\n')
 
 # Lastly, we can output the certificate fulcio issued us, and find our email address
 echo $cert | base64 --decode | openssl x509 -text
+
+git checkout main && git branch -D demo-test-branch

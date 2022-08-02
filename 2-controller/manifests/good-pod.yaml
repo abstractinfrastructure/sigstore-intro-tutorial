@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: good-pod
-  namespace: restricted-namespace
+  namespace: default
 spec:
   containers:
   - name: nginx
-    image: jeefy/sigstore-intro-tutorial:main
+    image: ghcr.io/jeefy/booty:main
     ports:
     - containerPort: 80

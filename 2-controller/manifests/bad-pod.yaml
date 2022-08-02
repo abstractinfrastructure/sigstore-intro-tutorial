@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: bad-pod
-  namespace: restricted-namespace
+  namespace: default
 spec:
   containers:
   - name: nginx
-    image: nginx:stable-alpine
+    image: jeefy/booty:latest # A random unsigned image that our policy matches
     ports:
     - containerPort: 80

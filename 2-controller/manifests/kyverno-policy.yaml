@@ -1,0 +1,30 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: check-image-keyless
+spec:
+  validationFailureAction: enforce
+  webhookTimeoutSeconds: 30
+  rules:
+    - name: check-image-keyless
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      verifyImages:
+      - imageReferences:
+        - "jeefy/*"
+        attestors:
+        - entries:
+          - keyless:
+              subject: "*@jeefy.dev"
+              issuer: "https://github.com/login/oauth"
+      - imageReferences:
+        - "*/jeefy/*"
+        attestors:
+        - entries:
+          - keyless:
+              subject: https://github.com/jeefy/*/.github/workflows/*@*
+              issuer: https://token.actions.githubusercontent.com
