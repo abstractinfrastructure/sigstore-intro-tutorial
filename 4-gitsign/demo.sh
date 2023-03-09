@@ -28,7 +28,7 @@ rekor-cli get --uuid=$uuid --format=json | jq .
 # With that UUID, we can look up the signature content (also in rekor) and validate things with cosign
 export sig=$(rekor-cli get --uuid=$uuid --format=json | jq -r .Body.HashedRekordObj.signature.content)
 export cert=$(rekor-cli get --uuid=$uuid --format=json | jq -r .Body.HashedRekordObj.signature.publicKey.content)
-cosign verify-blob --cert <(echo $cert | base64 --decode) --signature <(echo $sig | base64 --decode) <(git rev-parse HEAD | tr -d '\n')
+cosign verify-blob --certificate-identity-regexp=".*" --certificate-oidc-issuer-regexp=".*" --cert <(echo $cert | base64 --decode) --signature <(echo $sig | base64 --decode) <(git rev-parse HEAD | tr -d '\n')
 
 # Lastly, we can output the certificate fulcio issued us, and find our email address
 echo $cert | base64 --decode | openssl x509 -text

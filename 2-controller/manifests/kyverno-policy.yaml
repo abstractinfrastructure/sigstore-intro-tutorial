@@ -4,7 +4,7 @@ kind: ClusterPolicy
 metadata:
   name: check-image-keyless
 spec:
-  validationFailureAction: enforce
+  validationFailureAction: Enforce
   webhookTimeoutSeconds: 30
   rules:
     - name: check-image-keyless
@@ -21,6 +21,8 @@ spec:
           - keyless:
               subject: "*@jeefy.dev"
               issuer: "https://github.com/login/oauth"
+              rekor:
+                url: https://rekor.sigstore.dev
       - imageReferences:
         - "*/jeefy/*"
         attestors:
@@ -28,3 +30,5 @@ spec:
           - keyless:
               subject: https://github.com/jeefy/*/.github/workflows/*@*
               issuer: https://token.actions.githubusercontent.com
+              rekor:
+                url: https://rekor.sigstore.dev

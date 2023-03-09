@@ -10,9 +10,9 @@ docker push "$GITHUB_ORG/$GITHUB_REPO"
 
 cosign sign "$GITHUB_ORG/$GITHUB_REPO"
 
-cosign verify "$GITHUB_ORG/$GITHUB_REPO" -o json | jq .
+cosign verify --certificate-identity-regexp=".*" --certificate-oidc-issuer-regexp=".*" "$GITHUB_ORG/$GITHUB_REPO" -o json | jq .
 
-export uuid=$(cosign verify "$GITHUB_ORG/$GITHUB_REPO" -o json | jq '.[-1].optional.Bundle.Payload.logIndex')
+export uuid=$(cosign verify --certificate-identity-regexp=".*" --certificate-oidc-issuer-regexp=".*" "$GITHUB_ORG/$GITHUB_REPO" -o json | jq '.[-1].optional.Bundle.Payload.logIndex')
 
 # If you want to install the rekor-cli to interact with the public rekor instance directly...
 rekor-cli get --format json --log-index $uuid | jq .
